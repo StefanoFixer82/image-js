@@ -7,6 +7,8 @@ import Matrix from 'ml-matrix';
 // Global variable exposed by UMD bundle
 export as namespace IJS;
 
+declare type RoiManagerOptions = any;
+declare type HTMLCanvasElement = any;
 export declare class Image {
   width: number;
   height: number;
@@ -34,8 +36,9 @@ export declare class Image {
   static createFrom(other: Image, options: ImageConstructorOptions): Image;
   static load(
     image: string | ArrayBuffer | Uint8Array,
+    exportBuffer: { buffer: Uint8Array|undefined},
     options?: RequestInit & { ignorePalette: boolean },
-  ): Promise<Image>;
+  ) : Promise<Image>;
 
   getRoiManager(options?: RoiManagerOptions): RoiManager;
   clone(): Image;
@@ -423,14 +426,9 @@ export declare class Roi {
   get height(): number;
   get width(): number;
   get center(): [number, number];
-  get ratio(): number;
-  get center(): [number, number];
-  get ratio(): number;
-  get width(): number;
-  get height(): number;
+  get ratio(): number; 
   get externalIDs(): number[];
-  get externalLengths(): number[];
-  get borderIDs(): number[];
+  get externalLengths(): number[]; 
   get borderIDs(): number[];
   get borderLengths(): number[];
   get boxIDs(): number[];
@@ -556,11 +554,7 @@ export class RoiManager {
   getData(options?: Record<string, any>): number[];
   paint(options?: {
     labelProperty?: string;
-    analysisProperty?: string;
-    analysisProperty?: string;
-    labelProperty?: string;
-    analysisProperty?: string;
-    labelProperty?: string;
+    analysisProperty?: string;  
     pixelSize?: number;
     unit?: string;
   }): Image;

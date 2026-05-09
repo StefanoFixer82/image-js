@@ -1,6 +1,6 @@
 import { canvasToBlob } from 'blob-util';
 import { encode as encodeBmp } from 'fast-bmp';
-import { encode as realEncodePng } from 'fast-png';
+import { encode as realEncodePng } from 'fast-png-fork-ste';
 import { encode as realEncodeJpeg } from 'jpeg-js';
 
 import { toBase64URL } from '../../util/base64';

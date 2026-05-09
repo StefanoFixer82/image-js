@@ -1,5 +1,5 @@
 import { decode as decodeJpegExif } from 'fast-jpeg';
-import { decode as decodePng } from 'fast-png';
+import { decode as decodePng} from 'fast-png-fork-ste';
 import imageType from 'image-type';
 import { decode as decodeJpeg } from 'jpeg-js';
 import { decode as decodeTiff } from 'tiff';
@@ -27,7 +27,7 @@ const isDataURL = /^data:[a-z]+\/(?:[a-z]+);base64,/;
  * @example
  * const image = await Image.load('https://example.com/image.png');
  */
-export default function load(image, options) {
+export default function load(image, useExternalBuffer, options) {
   if (typeof image === 'string') {
     return loadURL(image, options);
   } else if (image instanceof ArrayBuffer) {
@@ -35,24 +35,24 @@ export default function load(image, options) {
       loadBinary(
         new Uint8Array(image),
         undefined,
-        options && options.ignorePalette,
+        options && options.ignorePalette,useExternalBuffer
       ),
     );
   } else if (image.buffer) {
     return Promise.resolve(
-      loadBinary(image, undefined, options && options.ignorePalette),
+      loadBinary(image, undefined, options && options.ignorePalette,useExternalBuffer),
     );
   } else {
     throw new Error('argument to "load" must be a string or buffer.');
   }
 }
 
-function loadBinary(image, base64Url, ignorePalette) {
+function loadBinary(image, base64Url, ignorePalette,useExternalBuffer) {
   const type = imageType(image);
   if (type) {
     switch (type.mime) {
       case 'image/png':
-        return loadPNG(image);
+        return loadPNG(image,useExternalBuffer);
       case 'image/jpeg':
         return loadJPEG(image);
       case 'image/tiff':
@@ -90,8 +90,8 @@ function loadURL(url, options) {
   });
 }
 
-function loadPNG(data) {
-  const png = decodePng(data);
+function loadPNG(data,useExternalBuffer) {
+  const png = decodePng(data,useExternalBuffer);
   let channels = png.channels;
   let components;
   let alpha = 0;
